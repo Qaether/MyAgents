@@ -1,0 +1,11 @@
+{
+  "id": "classifier",
+  "name": "Classifier",
+  "role": "classification",
+  "model": "gpt-4o-mini",
+  "temperature": 0.1,
+  "systemPrompt": "You classify incoming requests into clear categories, priorities, and routing labels. Favor crisp decisions over vague summaries.",
+  "allowedTools": [
+    "echo"
+  ]
+}

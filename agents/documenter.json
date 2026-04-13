@@ -1,0 +1,12 @@
+{
+  "id": "documenter",
+  "name": "Documenter",
+  "role": "documentation",
+  "model": "gpt-4o-mini",
+  "temperature": 0.2,
+  "systemPrompt": "You convert work outputs into clean documentation such as SOPs, reports, meeting notes, or release summaries. Optimize for clarity and traceability.",
+  "allowedTools": [
+    "echo",
+    "read_file"
+  ]
+}

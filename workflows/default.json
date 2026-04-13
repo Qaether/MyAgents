@@ -1,0 +1,132 @@
+{
+  "id": "default",
+  "name": "Default Delivery Workflow",
+  "description": "Plan, research, draft, and review a user request.",
+  "allowedTools": [
+    "timestamp",
+    "join",
+    "echo"
+  ],
+  "stages": [
+    {
+      "id": "plan",
+      "steps": [
+        {
+          "id": "plan",
+          "agentId": "planner",
+          "instruction": "User request:\\n{{task}}\\n\\nCreate a short execution plan with fields objective, approach, risks, and successCriteria.",
+          "structuredOutput": {
+            "fields": {
+              "objective": "string",
+              "approach": "string",
+              "risks": "string[]",
+              "successCriteria": "string[]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "context",
+      "steps": [
+        {
+          "id": "research",
+          "agentId": "researcher",
+          "dependsOn": [
+            "plan"
+          ],
+          "instruction": "User request:\\n{{task}}\\n\\nObjective:\\n{{steps.plan.data.objective}}\\n\\nApproach:\\n{{steps.plan.data.approach}}\\n\\nProvide fields facts, assumptions, missingInformation, and constraints for the writer.",
+          "structuredOutput": {
+            "fields": {
+              "facts": "string[]",
+              "assumptions": "string[]",
+              "missingInformation": "string[]",
+              "constraints": "string[]"
+            }
+          }
+        },
+        {
+          "id": "review_prep",
+          "agentId": "reviewer",
+          "dependsOn": [
+            "plan"
+          ],
+          "instruction": "User request:\\n{{task}}\\n\\nObjective:\\n{{steps.plan.data.objective}}\\n\\nList fields qualityCriteria and failureModes.",
+          "structuredOutput": {
+            "fields": {
+              "qualityCriteria": "string[]",
+              "failureModes": "string[]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "steps": [
+        {
+          "id": "draft",
+          "agentId": "writer",
+          "dependsOn": [
+            "research",
+            "review_prep"
+          ],
+          "tools": [
+            {
+              "tool": "timestamp",
+              "as": "generatedAt"
+            },
+            {
+              "tool": "join",
+              "as": "riskList",
+              "input": {
+                "values": "{{steps.plan.data.risks}}",
+                "separator": " | "
+              }
+            }
+          ],
+          "artifacts": [
+            {
+              "name": "draft_markdown",
+              "fileName": "draft.md",
+              "contentFrom": "output"
+            }
+          ],
+          "instruction": "User request:\\n{{task}}\\n\\nGenerated at:\\n{{steps.draft.tools.generatedAt}}\\n\\nObjective:\\n{{steps.plan.data.objective}}\\n\\nApproach:\\n{{steps.plan.data.approach}}\\n\\nRisks:\\n{{steps.draft.tools.riskList}}\\n\\nFacts:\\n{{steps.research.data.facts}}\\n\\nAssumptions:\\n{{steps.research.data.assumptions}}\\n\\nConstraints:\\n{{steps.research.data.constraints}}\\n\\nQuality criteria:\\n{{steps.review_prep.data.qualityCriteria}}\\n\\nFailure modes:\\n{{steps.review_prep.data.failureModes}}\\n\\nWrite the best possible deliverable."
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "steps": [
+        {
+          "id": "review",
+          "agentId": "reviewer",
+          "dependsOn": [
+            "draft"
+          ],
+          "approval": {
+            "required": true,
+            "key": "default:review",
+            "message": "Review step requires human approval."
+          },
+          "when": {
+            "stepId": "draft",
+            "exists": true
+          },
+          "instruction": "User request:\\n{{task}}\\n\\nDraft path:\\n{{steps.draft.artifacts.draft_markdown.path}}\\n\\nDraft content:\\n{{steps.draft.artifacts.draft_markdown.content}}\\n\\nReview it with a short summary, key issues, and concrete improvements."
+        }
+      ]
+    }
+  ],
+  "output": {
+    "finalStepId": "draft",
+    "includeSteps": [
+      "plan",
+      "research",
+      "review_prep",
+      "draft",
+      "review"
+    ]
+  }
+}

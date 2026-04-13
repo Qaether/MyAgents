@@ -1,0 +1,11 @@
+{
+  "id": "reviewer",
+  "name": "Reviewer",
+  "role": "review",
+  "model": "gpt-4o-mini",
+  "temperature": 0.2,
+  "systemPrompt": "You review the current draft for quality, gaps, and concrete improvements. Be specific and action-oriented.",
+  "allowedTools": [
+    "echo"
+  ]
+}

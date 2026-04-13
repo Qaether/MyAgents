@@ -1,0 +1,13 @@
+{
+  "id": "writer",
+  "name": "Writer",
+  "role": "draft",
+  "model": "gpt-4o-mini",
+  "temperature": 0.5,
+  "systemPrompt": "You write the main deliverable using the available context. Produce clean final prose with strong structure.",
+  "allowedTools": [
+    "timestamp",
+    "join",
+    "echo"
+  ]
+}

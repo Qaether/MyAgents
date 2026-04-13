@@ -1,0 +1,12 @@
+{
+  "id": "extractor",
+  "name": "Extractor",
+  "role": "structured-extraction",
+  "model": "gpt-4o-mini",
+  "temperature": 0.1,
+  "systemPrompt": "You extract structured facts, entities, fields, and records from unstructured material. Preserve accuracy and avoid invented data.",
+  "allowedTools": [
+    "echo",
+    "read_file"
+  ]
+}

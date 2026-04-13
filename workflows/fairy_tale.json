@@ -1,0 +1,152 @@
+{
+  "id": "fairy_tale",
+  "name": "Korean Folktale Workflow",
+  "description": "Create a short Korean folktale with a classic moral arc and simple child-friendly prose.",
+  "allowedTools": [
+    "timestamp",
+    "join",
+    "echo"
+  ],
+  "stages": [
+    {
+      "id": "route_and_plan",
+      "steps": [
+        {
+          "id": "route",
+          "agentId": "router",
+          "instruction": "User request:\\n{{task}}\\n\\nDecide the best folktale pattern and state it in one short sentence.",
+          "artifacts": [
+            {
+              "name": "route_note",
+              "fileName": "route.txt",
+              "contentFrom": "output"
+            }
+          ]
+        },
+        {
+          "id": "plan",
+          "agentId": "planner",
+          "instruction": "User request:\\n{{task}}\\n\\nCreate fields theme, setting, characters, conflict, lesson, and endingTone for a Korean folktale similar in feeling to classic sibling danger-and-safety tales, but with an original plot.",
+          "structuredOutput": {
+            "fields": {
+              "theme": "string",
+              "setting": "string",
+              "characters": "string[]",
+              "conflict": "string",
+              "lesson": "string",
+              "endingTone": "string"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "story_context",
+      "steps": [
+        {
+          "id": "research",
+          "agentId": "researcher",
+          "dependsOn": [
+            "plan"
+          ],
+          "instruction": "User request:\\n{{task}}\\n\\nTheme: {{steps.plan.data.theme}}\\nSetting: {{steps.plan.data.setting}}\\nCharacters: {{steps.plan.data.characters}}\\nConflict: {{steps.plan.data.conflict}}\\n\\nProvide fields motifs, emotionalBeats, dangerRule, and safetyRule suitable for a short Korean folktale for children.",
+          "structuredOutput": {
+            "fields": {
+              "motifs": "string[]",
+              "emotionalBeats": "string[]",
+              "dangerRule": "string",
+              "safetyRule": "string"
+            }
+          }
+        },
+        {
+          "id": "risk_review",
+          "agentId": "critic",
+          "dependsOn": [
+            "plan"
+          ],
+          "instruction": "User request:\\n{{task}}\\n\\nCheck for problems in a child-friendly folktale plan. Return fields avoid, soften, and preserve.",
+          "structuredOutput": {
+            "fields": {
+              "avoid": "string[]",
+              "soften": "string[]",
+              "preserve": "string[]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "draft_story",
+      "steps": [
+        {
+          "id": "draft",
+          "agentId": "writer",
+          "dependsOn": [
+            "research",
+            "risk_review"
+          ],
+          "tools": [
+            {
+              "tool": "join",
+              "as": "motif_list",
+              "input": {
+                "values": "{{steps.research.data.motifs}}",
+                "separator": ", "
+              }
+            },
+            {
+              "tool": "join",
+              "as": "preserve_list",
+              "input": {
+                "values": "{{steps.risk_review.data.preserve}}",
+                "separator": ", "
+              }
+            }
+          ],
+          "artifacts": [
+            {
+              "name": "story_markdown",
+              "fileName": "story.md",
+              "contentFrom": "output"
+            }
+          ],
+          "instruction": "Write a short original Korean folktale for children.\\n\\nTheme: {{steps.plan.data.theme}}\\nSetting: {{steps.plan.data.setting}}\\nCharacters: {{steps.plan.data.characters}}\\nConflict: {{steps.plan.data.conflict}}\\nLesson: {{steps.plan.data.lesson}}\\nEnding tone: {{steps.plan.data.endingTone}}\\nMotifs: {{steps.draft.tools.motif_list}}\\nDanger rule: {{steps.research.data.dangerRule}}\\nSafety rule: {{steps.research.data.safetyRule}}\\nPreserve: {{steps.draft.tools.preserve_list}}\\nAvoid: {{steps.risk_review.data.avoid}}\\nSoften: {{steps.risk_review.data.soften}}\\n\\nRequirements:\\n- Similar in spirit to classic Korean folktales such as sibling cautionary tales, but do not copy plot beats closely.\\n- Keep the prose simple and warm.\\n- Use a clear beginning, middle, and end.\\n- End with a gentle moral."
+        }
+      ]
+    },
+    {
+      "id": "review_and_finish",
+      "steps": [
+        {
+          "id": "review",
+          "agentId": "reviewer",
+          "dependsOn": [
+            "draft"
+          ],
+          "instruction": "Review this folktale for child-friendly tone, clarity, rhythm, and a satisfying moral.\\n\\nStory path: {{steps.draft.artifacts.story_markdown.path}}\\n\\nStory content:\\n{{steps.draft.artifacts.story_markdown.content}}"
+        },
+        {
+          "id": "summary",
+          "agentId": "summarizer",
+          "dependsOn": [
+            "draft"
+          ],
+          "instruction": "Summarize the final folktale in 3 short bullet-style lines for an adult editor."
+        }
+      ]
+    }
+  ],
+  "output": {
+    "finalStepId": "draft",
+    "includeSteps": [
+      "route",
+      "plan",
+      "research",
+      "risk_review",
+      "draft",
+      "review",
+      "summary"
+    ]
+  }
+}

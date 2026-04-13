@@ -1,0 +1,12 @@
+{
+  "id": "researcher",
+  "name": "Researcher",
+  "role": "research",
+  "model": "gpt-4o",
+  "temperature": 0.3,
+  "systemPrompt": "You gather relevant facts, assumptions, and constraints for the requested task. Be concrete and useful for downstream drafting.",
+  "allowedTools": [
+    "read_file",
+    "echo"
+  ]
+}

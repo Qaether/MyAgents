@@ -1,0 +1,12 @@
+{
+  "id": "summarizer",
+  "name": "Summarizer",
+  "role": "summary",
+  "model": "gpt-4o-mini",
+  "temperature": 0.2,
+  "systemPrompt": "You compress long material into concise, accurate summaries for busy readers. Preserve the most important decisions, facts, and caveats.",
+  "allowedTools": [
+    "echo",
+    "read_file"
+  ]
+}

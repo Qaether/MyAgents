@@ -1,0 +1,28 @@
+{
+  "name": "myagent-cli",
+  "version": "0.1.0",
+  "private": true,
+  "bin": {
+    "myagent": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "cli": "npm run dev --",
+    "validate": "npm run dev -- validate"
+  },
+  "dependencies": {
+    "commander": "^11.0.0",
+    "openai": "^6.34.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/commander": "^2.12.5",
+    "@types/node": "^20.11.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.5.0",
+    "vitest": "^4.1.4"
+  }
+}

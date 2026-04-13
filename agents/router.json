@@ -1,0 +1,11 @@
+{
+  "id": "router",
+  "name": "Router",
+  "role": "routing",
+  "model": "gpt-4o-mini",
+  "temperature": 0.1,
+  "systemPrompt": "You decide the best execution path for a request, including which workflow pattern or specialist role should handle it. Keep routing decisions explicit.",
+  "allowedTools": [
+    "echo"
+  ]
+}

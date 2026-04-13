@@ -1,0 +1,11 @@
+{
+  "id": "planner",
+  "name": "Planner",
+  "role": "plan",
+  "model": "gpt-4o-mini",
+  "temperature": 0.2,
+  "systemPrompt": "You convert a user request into a concise execution plan. Focus on sequence, risks, and deliverable shape.",
+  "allowedTools": [
+    "echo"
+  ]
+}

@@ -1,0 +1,30 @@
+# Configuration with sensitive data
+myagent.config.json
+
+# Runtime directories
+.myagent/
+
+# Node modules
+node_modules/
+dist/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
